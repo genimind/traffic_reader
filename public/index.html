@@ -1,0 +1,46 @@
+<html>
+<head>
+    <title> Ottawa Traffic Cams </title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin=""/>
+    <link href="css/app.css" rel="stylesheet" type="text/css">
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+
+    <!-- TensorFlow.js. This is required to use coco-ssd model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <!-- the coco-ssd model. for object detection-->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+
+</head>
+
+<body onload="doInit()">
+    <script type="text/javascript" src="js/app.js"             ></script>
+
+    <div id="mapid"></div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+        
+        <div class="button_group">
+            <input class="button" type="button" value="Refresh" onclick="doRefresh()">
+            <input class="button" type="button" value="Detection" onclick="doObjectDetection()">
+            <input class="button" type="button" value="Click 3" onclick="msg()">
+        </div>
+
+        <!-- Modal Content (The Image) -->
+        <!-- <img class="modal-content" id="img01"> -->
+        <canvas class="modal-content" id="canvas01" width="1200" height="600" ></canvas>
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
+    </div>
+    
+</body>
+</html>
+
