@@ -9,18 +9,18 @@ from bottle import static_file
 
 # app = Bottle()
 
-@get('/')
-def get_main():
-    print('getting index.html')
-    return static_file('index.html', root='./public')
-
-@route('<filepath:path>')
-def get_static(filepath = 'index.html'):
-    print('getting ...', filepath)
+@route('/')
+def get_main(filepath = 'index.html'):
+    print('getting ', filepath)
     return static_file(filepath, root='./public')
 
-# @route('/css/<filepath:path>')
-# def get_static(filepath = 'index.html'):
+@route('/<filepath:path>')
+def get_static(filepath):
+    print('getting (1) ...', filepath)
+    return static_file(filepath, root='./public')
+
+# @route('css/<filepath:path>')
+# def get_static(filepath):
 #     print('getting ...', filepath)
 #     return static_file(filepath, root='./public/css')
 
@@ -28,7 +28,7 @@ def get_static(filepath = 'index.html'):
 def hello():
     return "Hello World!"
 
-@get('/photo')
+@route('/photo')
 def get_image():
     cam = request.query.cam
     id = request.query.id
@@ -37,13 +37,19 @@ def get_image():
     print('url:', url)
     r = requests.get(url)
     filename = 'camera_{}_id_{}__{}.png'.format(cam, id, datetime.now().strftime('%Y-%m-%d__%H_%M_%S'))
-
+    filename = os.path.join('data', filename)
+    # it seems that we do get a good status_code but the content is just a '{"error":-1}'
     if r.status_code == 200:
         # store the file locally
-        with open(os.path.join('./public', 'data', filename), 'wb') as f:
-            f.write(r.content)
+        if len(r.content) < 20:
+            filename = os.path.join('icons', 'unavailable.png')
+        else:
+            with open(os.path.join('./public', filename), 'wb') as f:
+                f.write(r.content)
+    else:
+        print('error getting image. status_code:', r.status_code)
     # print(r.headers)
-    return {'filename':os.path.join('data', filename)}
+    return {'filename':filename}
 
 @post('/results')
 def post_results():

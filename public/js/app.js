@@ -15,7 +15,7 @@ function doRefresh() {
     fetch_image(cur_camNumber, id, image)  
 }
 
-function doObjectDetection() {
+function doObjectDetection1() {
     var modalCanvas = document.getElementById("canvas01");
     // var canvasData = modalCanvas.toDataURL("image/png");
     // detect objects in the image.
@@ -61,6 +61,7 @@ function cropToCanvas(image) {
     image.onload = function() {
         const naturalWidth = image.naturalWidth;
         const naturalHeight = image.naturalHeight;
+        writeToStatus(`Image: (${naturalWidth},${naturalHeight})`)
 
         canvas.width = image.width;
         canvas.height = image.height;
@@ -75,19 +76,19 @@ function fetch_image(cam, id, image) {
     .then(
       function(response) {
         if (response.status != 200) {
-          console.log('Error requesting data. Status Code: ' + response.status)
+          writeToStatus('Error requesting data. Status Code: ' + response.status)
           return
         }
         // get the data
         response.json().then(function(data) {
-          console.log('GOT: ', data)
+          //console.log('GOT: ', data)
           image.src = data.filename;
           cropToCanvas(image)
         })
       }
     )
     .catch(function(err) {
-      console.log('Fetch err : -S', err)
+      writeToStatus('Fetch err : -S', err)
     })
 }
 
@@ -98,6 +99,7 @@ function display_image(camNumber, camType, camName) {
     var modal = document.getElementById('myModal');
     var captionText = document.getElementById("caption");
     
+    writeToStatus(`reading camera: ${camNumber}, type:${camType}, name:${camName}`)
     modal.style.display = "block";
     id = 25 + Math.floor(Math.random() * 17534);
     id = id.toString(16);
@@ -216,4 +218,10 @@ function doInit() {
     cocoSsd.load().then(model => {
         document.cocoModel = model
     }); 
+}
+
+function writeToStatus(text) {
+    var statusText = document.getElementById('statusBox');
+    statusText.value += '\n' + text;
+    statusText.scrollTop = statusText.scrollHeight;
 }
